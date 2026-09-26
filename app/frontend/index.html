@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI FitTrack</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>AI FitTrack</h1>
+        <p>Fitness Tracking & AI Recommendation System</p>
+    </header>
+
+
+    <main>
+
+        <!-- USER SECTION -->
+        <section class="card">
+
+            <h2>Create User</h2>
+
+            <input
+                type="text"
+                id="name"
+                placeholder="Name"
+            >
+
+            <input
+                type="number"
+                id="age"
+                placeholder="Age"
+            >
+
+            <input
+                type="number"
+                id="weight"
+                placeholder="Weight (kg)"
+            >
+
+            <input
+                type="number"
+                id="height"
+                placeholder="Height (cm)"
+            >
+
+            <input
+                type="text"
+                id="goal"
+                placeholder="Fitness Goal"
+            >
+
+            <button onclick="createUser()">
+                Create User
+            </button>
+
+        </section>
+
+
+        <!-- WORKOUT SECTION -->
+        <section class="card">
+
+            <h2>Add Workout</h2>
+
+            <input
+                type="number"
+                id="workoutUserId"
+                placeholder="User ID"
+            >
+
+            <input
+                type="text"
+                id="exercise"
+                placeholder="Exercise"
+            >
+
+            <input
+                type="number"
+                id="sets"
+                placeholder="Sets"
+            >
+
+            <input
+                type="number"
+                id="reps"
+                placeholder="Reps"
+            >
+
+            <input
+                type="number"
+                id="duration"
+                placeholder="Duration (minutes)"
+            >
+
+            <button onclick="addWorkout()">
+                Add Workout
+            </button>
+
+        </section>
+
+
+        <!-- PROGRESS SECTION -->
+        <section class="card">
+
+            <h2>Add Progress</h2>
+
+            <input
+                type="number"
+                id="progressUserId"
+                placeholder="User ID"
+            >
+
+            <input
+                type="number"
+                id="progressWeight"
+                placeholder="Weight (kg)"
+            >
+
+            <input
+                type="date"
+                id="progressDate"
+            >
+
+            <button onclick="addProgress()">
+                Add Progress
+            </button>
+
+        </section>
+
+
+        <!-- AI SECTION -->
+        <section class="card ai-card">
+
+            <h2>🤖 AI Recommendation</h2>
+
+            <input
+                type="number"
+                id="aiUserId"
+                placeholder="User ID"
+            >
+
+            <button onclick="getRecommendation()">
+                Get AI Recommendation
+            </button>
+
+            <div id="result"></div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        <p>AI FitTrack API | B.Sc. Computer Science Project</p>
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
