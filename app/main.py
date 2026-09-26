@@ -52,7 +52,6 @@ app.add_middleware(
 
 @app.get("/")
 def home():
-
     return {
         "project": "AI FitTrack API",
         "status": "running",
@@ -66,7 +65,6 @@ def home():
 
 @app.get("/users")
 def get_users(db: Session = Depends(get_db)):
-
     return db.query(User).all()
 
 
@@ -89,9 +87,7 @@ def create_user(
     )
 
     db.add(new_user)
-
     db.commit()
-
     db.refresh(new_user)
 
     return new_user
@@ -112,7 +108,6 @@ def get_user(
     ).first()
 
     if user is None:
-
         raise HTTPException(
             status_code=404,
             detail="User not found"
@@ -136,7 +131,6 @@ def delete_user(
     ).first()
 
     if user is None:
-
         raise HTTPException(
             status_code=404,
             detail="User not found"
@@ -178,7 +172,6 @@ def create_workout(
     ).first()
 
     if user is None:
-
         raise HTTPException(
             status_code=404,
             detail="User not found"
@@ -193,16 +186,14 @@ def create_workout(
     )
 
     db.add(new_workout)
-
     db.commit()
-
     db.refresh(new_workout)
 
     return new_workout
 
 
 # ==========================================
-# GET WORKOUTS BY USER ID
+# GET WORKOUTS
 # ==========================================
 
 @app.get("/workouts/{user_id}")
@@ -231,7 +222,6 @@ def create_progress(
     ).first()
 
     if user is None:
-
         raise HTTPException(
             status_code=404,
             detail="User not found"
@@ -244,16 +234,14 @@ def create_progress(
     )
 
     db.add(new_progress)
-
     db.commit()
-
     db.refresh(new_progress)
 
     return new_progress
 
 
 # ==========================================
-# GET PROGRESS BY USER ID
+# GET PROGRESS
 # ==========================================
 
 @app.get("/progress/{user_id}")
@@ -282,7 +270,6 @@ def get_ai_recommendation(
     ).first()
 
     if user is None:
-
         raise HTTPException(
             status_code=404,
             detail="User not found"
