@@ -1,73 +1,123 @@
-const API_URL = "http://127.0.0.1:8000";
+// ==========================================
+// AI FitTrack API URL
+// ==========================================
+
+const API_URL = "https://ai-fittrack-api.onrender.com";
 
 
-// =========================
+// ==========================================
 // CREATE USER
-// =========================
+// ==========================================
 
 async function createUser() {
 
     const data = {
-        name: document.getElementById("name").value,
-        age: Number(document.getElementById("age").value),
-        weight: Number(document.getElementById("weight").value),
-        height: Number(document.getElementById("height").value),
-        fitness_goal: document.getElementById("goal").value
+
+        name:
+            document.getElementById("name").value,
+
+        age:
+            Number(
+                document.getElementById("age").value
+            ),
+
+        weight:
+            Number(
+                document.getElementById("weight").value
+            ),
+
+        height:
+            Number(
+                document.getElementById("height").value
+            ),
+
+        fitness_goal:
+            document.getElementById("goal").value
+
     };
+
 
     try {
 
-        const response = await fetch(`${API_URL}/users`, {
-            method: "POST",
+        const response = await fetch(
+            `${API_URL}/users`,
+            {
+                method: "POST",
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-            body: JSON.stringify(data)
-        });
+                body: JSON.stringify(data)
+            }
+        );
+
 
         const result = await response.json();
 
+
+        if (!response.ok) {
+
+            alert(
+                "Error: " +
+                (result.detail || "Unable to create user")
+            );
+
+            return;
+        }
+
+
         alert(
-            "User created successfully!\nUser ID: "
-            + result.id
+            "User created successfully!\n\n" +
+            "User ID: " +
+            result.id
         );
+
 
     } catch (error) {
 
-        alert("Error connecting to API.");
+        alert(
+            "Error connecting to API."
+        );
+
         console.error(error);
     }
 }
 
 
-// =========================
+// ==========================================
 // ADD WORKOUT
-// =========================
+// ==========================================
 
 async function addWorkout() {
 
     const data = {
-        user_id: Number(
-            document.getElementById("workoutUserId").value
-        ),
+
+        user_id:
+            Number(
+                document.getElementById("workoutUserId").value
+            ),
 
         exercise:
             document.getElementById("exercise").value,
 
-        sets: Number(
-            document.getElementById("sets").value
-        ),
+        sets:
+            Number(
+                document.getElementById("sets").value
+            ),
 
-        reps: Number(
-            document.getElementById("reps").value
-        ),
+        reps:
+            Number(
+                document.getElementById("reps").value
+            ),
 
-        duration: Number(
-            document.getElementById("duration").value
-        )
+        duration:
+            Number(
+                document.getElementById("duration").value
+            )
+
     };
+
 
     try {
 
@@ -84,41 +134,60 @@ async function addWorkout() {
             }
         );
 
+
         const result = await response.json();
 
+
         if (!response.ok) {
-            alert(result.detail);
+
+            alert(
+                result.detail ||
+                "Unable to add workout"
+            );
+
             return;
         }
 
-        alert("Workout added successfully!");
+
+        alert(
+            "Workout added successfully!"
+        );
+
 
     } catch (error) {
 
-        alert("Error connecting to API.");
+        alert(
+            "Error connecting to API."
+        );
+
         console.error(error);
     }
 }
 
 
-// =========================
+// ==========================================
 // ADD PROGRESS
-// =========================
+// ==========================================
 
 async function addProgress() {
 
     const data = {
-        user_id: Number(
-            document.getElementById("progressUserId").value
-        ),
 
-        weight: Number(
-            document.getElementById("progressWeight").value
-        ),
+        user_id:
+            Number(
+                document.getElementById("progressUserId").value
+            ),
+
+        weight:
+            Number(
+                document.getElementById("progressWeight").value
+            ),
 
         date:
             document.getElementById("progressDate").value
+
     };
+
 
     try {
 
@@ -135,26 +204,40 @@ async function addProgress() {
             }
         );
 
+
         const result = await response.json();
 
+
         if (!response.ok) {
-            alert(result.detail);
+
+            alert(
+                result.detail ||
+                "Unable to add progress"
+            );
+
             return;
         }
 
-        alert("Progress added successfully!");
+
+        alert(
+            "Progress added successfully!"
+        );
+
 
     } catch (error) {
 
-        alert("Error connecting to API.");
+        alert(
+            "Error connecting to API."
+        );
+
         console.error(error);
     }
 }
 
 
-// =========================
-// AI RECOMMENDATION
-// =========================
+// ==========================================
+// GET AI RECOMMENDATION
+// ==========================================
 
 async function getRecommendation() {
 
@@ -164,24 +247,43 @@ async function getRecommendation() {
     const resultBox =
         document.getElementById("result");
 
+
+    if (!userId) {
+
+        resultBox.innerHTML =
+            "<p>Please enter User ID.</p>";
+
+        return;
+    }
+
+
+    resultBox.innerHTML =
+        "<p>Loading AI recommendation...</p>";
+
+
     try {
 
         const response = await fetch(
             `${API_URL}/ai/recommendation/${userId}`
         );
 
-        const data = await response.json();
+
+        const data =
+            await response.json();
+
 
         if (!response.ok) {
 
             resultBox.innerHTML =
-                `<p>${data.detail}</p>`;
+                `<p>${data.detail || "User not found"}</p>`;
 
             return;
         }
 
+
         resultBox.innerHTML = `
-            <h3>Recommendation</h3>
+
+            <h3>AI Recommendation</h3>
 
             <p>
                 <strong>User ID:</strong>
@@ -202,7 +304,9 @@ async function getRecommendation() {
                 <strong>Workouts Completed:</strong>
                 ${data.workouts_completed}
             </p>
+
         `;
+
 
     } catch (error) {
 
