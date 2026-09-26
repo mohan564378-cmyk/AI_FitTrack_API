@@ -1,5 +1,5 @@
 // ==========================================
-// AI FitTrack API URL
+// AI FitTrack Backend URL
 // ==========================================
 
 const API_URL = "https://ai-fittrack-api.onrender.com";
@@ -13,28 +13,38 @@ async function createUser() {
 
     const data = {
 
-        name:
-            document.getElementById("name").value,
+        name: document.getElementById("name").value,
 
-        age:
-            Number(
-                document.getElementById("age").value
-            ),
+        age: Number(
+            document.getElementById("age").value
+        ),
 
-        weight:
-            Number(
-                document.getElementById("weight").value
-            ),
+        weight: Number(
+            document.getElementById("weight").value
+        ),
 
-        height:
-            Number(
-                document.getElementById("height").value
-            ),
+        height: Number(
+            document.getElementById("height").value
+        ),
 
         fitness_goal:
             document.getElementById("goal").value
 
     };
+
+
+    if (
+        !data.name ||
+        !data.age ||
+        !data.weight ||
+        !data.height ||
+        !data.fitness_goal
+    ) {
+
+        alert("Please fill all user details.");
+
+        return;
+    }
 
 
     try {
@@ -59,8 +69,8 @@ async function createUser() {
         if (!response.ok) {
 
             alert(
-                "Error: " +
-                (result.detail || "Unable to create user")
+                result.detail ||
+                "Unable to create user."
             );
 
             return;
@@ -74,10 +84,20 @@ async function createUser() {
         );
 
 
+        document.getElementById("workoutUserId").value =
+            result.id;
+
+        document.getElementById("progressUserId").value =
+            result.id;
+
+        document.getElementById("aiUserId").value =
+            result.id;
+
+
     } catch (error) {
 
         alert(
-            "Error connecting to API."
+            "Error connecting to AI FitTrack API."
         );
 
         console.error(error);
@@ -93,30 +113,40 @@ async function addWorkout() {
 
     const data = {
 
-        user_id:
-            Number(
-                document.getElementById("workoutUserId").value
-            ),
+        user_id: Number(
+            document.getElementById("workoutUserId").value
+        ),
 
         exercise:
             document.getElementById("exercise").value,
 
-        sets:
-            Number(
-                document.getElementById("sets").value
-            ),
+        sets: Number(
+            document.getElementById("sets").value
+        ),
 
-        reps:
-            Number(
-                document.getElementById("reps").value
-            ),
+        reps: Number(
+            document.getElementById("reps").value
+        ),
 
-        duration:
-            Number(
-                document.getElementById("duration").value
-            )
+        duration: Number(
+            document.getElementById("duration").value
+        )
 
     };
+
+
+    if (
+        !data.user_id ||
+        !data.exercise ||
+        !data.sets ||
+        !data.reps ||
+        !data.duration
+    ) {
+
+        alert("Please fill all workout details.");
+
+        return;
+    }
 
 
     try {
@@ -142,7 +172,7 @@ async function addWorkout() {
 
             alert(
                 result.detail ||
-                "Unable to add workout"
+                "Unable to add workout."
             );
 
             return;
@@ -157,7 +187,7 @@ async function addWorkout() {
     } catch (error) {
 
         alert(
-            "Error connecting to API."
+            "Error connecting to AI FitTrack API."
         );
 
         console.error(error);
@@ -173,20 +203,30 @@ async function addProgress() {
 
     const data = {
 
-        user_id:
-            Number(
-                document.getElementById("progressUserId").value
-            ),
+        user_id: Number(
+            document.getElementById("progressUserId").value
+        ),
 
-        weight:
-            Number(
-                document.getElementById("progressWeight").value
-            ),
+        weight: Number(
+            document.getElementById("progressWeight").value
+        ),
 
         date:
             document.getElementById("progressDate").value
 
     };
+
+
+    if (
+        !data.user_id ||
+        !data.weight ||
+        !data.date
+    ) {
+
+        alert("Please fill all progress details.");
+
+        return;
+    }
 
 
     try {
@@ -212,7 +252,7 @@ async function addProgress() {
 
             alert(
                 result.detail ||
-                "Unable to add progress"
+                "Unable to add progress."
             );
 
             return;
@@ -227,7 +267,7 @@ async function addProgress() {
     } catch (error) {
 
         alert(
-            "Error connecting to API."
+            "Error connecting to AI FitTrack API."
         );
 
         console.error(error);
@@ -236,7 +276,7 @@ async function addProgress() {
 
 
 // ==========================================
-// GET AI RECOMMENDATION
+// AI RECOMMENDATION
 // ==========================================
 
 async function getRecommendation() {
@@ -275,7 +315,7 @@ async function getRecommendation() {
         if (!response.ok) {
 
             resultBox.innerHTML =
-                `<p>${data.detail || "User not found"}</p>`;
+                `<p>${data.detail || "User not found."}</p>`;
 
             return;
         }
@@ -283,7 +323,7 @@ async function getRecommendation() {
 
         resultBox.innerHTML = `
 
-            <h3>AI Recommendation</h3>
+            <h3>🤖 AI Recommendation</h3>
 
             <p>
                 <strong>User ID:</strong>
@@ -291,7 +331,7 @@ async function getRecommendation() {
             </p>
 
             <p>
-                <strong>Goal:</strong>
+                <strong>Fitness Goal:</strong>
                 ${data.goal}
             </p>
 
@@ -311,7 +351,7 @@ async function getRecommendation() {
     } catch (error) {
 
         resultBox.innerHTML =
-            "<p>Error connecting to API.</p>";
+            "<p>Error connecting to AI FitTrack API.</p>";
 
         console.error(error);
     }
