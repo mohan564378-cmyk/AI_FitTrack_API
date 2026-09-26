@@ -15,16 +15,16 @@ from .schemas import (
 from .ai import generate_recommendation
 
 
-# =========================
-# DATABASE
-# =========================
+# ==========================================
+# CREATE DATABASE TABLES
+# ==========================================
 
 Base.metadata.create_all(bind=engine)
 
 
-# =========================
+# ==========================================
 # FASTAPI APPLICATION
-# =========================
+# ==========================================
 
 app = FastAPI(
     title="AI FitTrack API",
@@ -33,9 +33,9 @@ app = FastAPI(
 )
 
 
-# =========================
+# ==========================================
 # CORS
-# =========================
+# ==========================================
 
 app.add_middleware(
     CORSMiddleware,
@@ -46,12 +46,13 @@ app.add_middleware(
 )
 
 
-# =========================
+# ==========================================
 # HOME
-# =========================
+# ==========================================
 
 @app.get("/")
 def home():
+
     return {
         "project": "AI FitTrack API",
         "status": "running",
@@ -59,20 +60,26 @@ def home():
     }
 
 
-# =========================
-# USERS
-# =========================
+# ==========================================
+# GET ALL USERS
+# ==========================================
 
 @app.get("/users")
 def get_users(db: Session = Depends(get_db)):
+
     return db.query(User).all()
 
+
+# ==========================================
+# CREATE USER
+# ==========================================
 
 @app.post("/users", response_model=UserResponse)
 def create_user(
     user: UserCreate,
     db: Session = Depends(get_db)
 ):
+
     new_user = User(
         name=user.name,
         age=user.age,
@@ -82,22 +89,30 @@ def create_user(
     )
 
     db.add(new_user)
+
     db.commit()
+
     db.refresh(new_user)
 
     return new_user
 
+
+# ==========================================
+# GET USER BY ID
+# ==========================================
 
 @app.get("/users/{user_id}", response_model=UserResponse)
 def get_user(
     user_id: int,
     db: Session = Depends(get_db)
 ):
+
     user = db.query(User).filter(
         User.id == user_id
     ).first()
 
     if user is None:
+
         raise HTTPException(
             status_code=404,
             detail="User not found"
@@ -106,20 +121,64 @@ def get_user(
     return user
 
 
-# =========================
-# WORKOUTS
-# =========================
+# ==========================================
+# DELETE USER BY ID
+# ==========================================
+
+@app.delete("/users/{user_id}")
+def delete_user(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+
+    user = db.query(User).filter(
+        User.id == user_id
+    ).first()
+
+    if user is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    # Delete user's workouts
+    db.query(Workout).filter(
+        Workout.user_id == user_id
+    ).delete()
+
+    # Delete user's progress
+    db.query(Progress).filter(
+        Progress.user_id == user_id
+    ).delete()
+
+    # Delete user
+    db.delete(user)
+
+    db.commit()
+
+    return {
+        "message": "User deleted successfully",
+        "user_id": user_id
+    }
+
+
+# ==========================================
+# CREATE WORKOUT
+# ==========================================
 
 @app.post("/workouts", response_model=WorkoutResponse)
 def create_workout(
     workout: WorkoutCreate,
     db: Session = Depends(get_db)
 ):
+
     user = db.query(User).filter(
         User.id == workout.user_id
     ).first()
 
     if user is None:
+
         raise HTTPException(
             status_code=404,
             detail="User not found"
@@ -134,36 +193,45 @@ def create_workout(
     )
 
     db.add(new_workout)
+
     db.commit()
+
     db.refresh(new_workout)
 
     return new_workout
 
+
+# ==========================================
+# GET WORKOUTS BY USER ID
+# ==========================================
 
 @app.get("/workouts/{user_id}")
 def get_workouts(
     user_id: int,
     db: Session = Depends(get_db)
 ):
+
     return db.query(Workout).filter(
         Workout.user_id == user_id
     ).all()
 
 
-# =========================
-# PROGRESS
-# =========================
+# ==========================================
+# CREATE PROGRESS
+# ==========================================
 
 @app.post("/progress", response_model=ProgressResponse)
 def create_progress(
     progress: ProgressCreate,
     db: Session = Depends(get_db)
 ):
+
     user = db.query(User).filter(
         User.id == progress.user_id
     ).first()
 
     if user is None:
+
         raise HTTPException(
             status_code=404,
             detail="User not found"
@@ -176,36 +244,45 @@ def create_progress(
     )
 
     db.add(new_progress)
+
     db.commit()
+
     db.refresh(new_progress)
 
     return new_progress
 
+
+# ==========================================
+# GET PROGRESS BY USER ID
+# ==========================================
 
 @app.get("/progress/{user_id}")
 def get_progress(
     user_id: int,
     db: Session = Depends(get_db)
 ):
+
     return db.query(Progress).filter(
         Progress.user_id == user_id
     ).all()
 
 
-# =========================
+# ==========================================
 # AI RECOMMENDATION
-# =========================
+# ==========================================
 
 @app.get("/ai/recommendation/{user_id}")
 def get_ai_recommendation(
     user_id: int,
     db: Session = Depends(get_db)
 ):
+
     user = db.query(User).filter(
         User.id == user_id
     ).first()
 
     if user is None:
+
         raise HTTPException(
             status_code=404,
             detail="User not found"
@@ -215,4 +292,7 @@ def get_ai_recommendation(
         Workout.user_id == user_id
     ).all()
 
-    return generate_recommendation(user, workouts)
+    return generate_recommendation(
+        user,
+        workouts
+    )
